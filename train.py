@@ -66,7 +66,7 @@ if args.resume_net is not None:
     net.load_state_dict(new_state_dict)
 
 if num_gpu > 1 and gpu_train:
-    net = torch.nn.DataParallel(net, device_ids=list(range(num_gpu)))
+    net = torch.nn.DataParallel(net, device_ids=[0])
 
 device = torch.device('cuda:0' if gpu_train else 'cpu')
 cudnn.benchmark = True
