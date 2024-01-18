@@ -1,0 +1,5 @@
+numpy
+Cython
+torch
+opencv-python
+
