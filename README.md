@@ -89,3 +89,8 @@ python3 test.py -s --vis_thres 0.3
   * [ssd.pytorch](https://github.com/amdegroot/ssd.pytorch), [RFBNet](https://github.com/ruinmessi/RFBNet)
 
   _Note: If you can not download the converted annotations, the provided images and the trained model through the above links, you can download them through [BaiduYun](https://pan.baidu.com/s/1HoW3wbldnbmgW2PS4i4Irw)._
+
+## Common errors & fixes
+
+Error: ImportError: libGL.so.1: cannot open shared object file: No such file or directory <br>
+Fix: apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
