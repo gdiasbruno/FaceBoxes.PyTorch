@@ -19,13 +19,13 @@ parser.add_argument('-m', '--trained_model', default='weights/FaceBoxes.pth',
                     type=str, help='Trained state_dict file path to open')
 parser.add_argument('--save_folder', default='eval/', type=str, help='Dir to save results')
 parser.add_argument('--cpu', action="store_true", default=False, help='Use cpu inference')
-parser.add_argument('--dataset', default='PASCAL', type=str, choices=['AFW', 'PASCAL', 'FDDB'], help='dataset')
+parser.add_argument('--dataset', default='PASCAL', type=str, choices=['AFW', 'PASCAL', 'FDDB', 'MALF'], help='dataset')
 parser.add_argument('--confidence_threshold', default=0.05, type=float, help='confidence_threshold')
 parser.add_argument('--top_k', default=5000, type=int, help='top_k')
 parser.add_argument('--nms_threshold', default=0.3, type=float, help='nms_threshold')
 parser.add_argument('--keep_top_k', default=750, type=int, help='keep_top_k')
 parser.add_argument('-s', '--show_image', action="store_true", default=False, help='show detection results')
-parser.add_argument('--vis_thres', default=0.5, type=float, help='visualization_threshold')
+parser.add_argument('--vis_thres', default=0.1, type=float, help='visualization_threshold')
 args = parser.parse_args()
 
 
@@ -97,6 +97,8 @@ if __name__ == '__main__':
         resize = 2.5
     elif args.dataset == "AFW":
         resize = 1
+    elif args.dataset == "MALF":
+        resize = 1
 
     _t = {'forward_pass': Timer(), 'misc': Timer()}
 
@@ -149,9 +151,9 @@ if __name__ == '__main__':
         _t['misc'].toc()
 
         # save dets
-        if args.dataset == "FDDB":
+        if args.dataset == "FDDB" or args.dataset == "MALF":
             fw.write('{:s}\n'.format(img_name))
-            fw.write('{:.1f}\n'.format(dets.shape[0]))
+            fw.write('{:.0f}\n'.format(dets.shape[0]))
             for k in range(dets.shape[0]):
                 xmin = dets[k, 0]
                 ymin = dets[k, 1]
@@ -184,7 +186,7 @@ if __name__ == '__main__':
                 cy = b[1] + 12
                 cv2.putText(img_raw, text, (cx, cy),
                             cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255))
-            cv2.imshow('res', img_raw)
-            cv2.waitKey(0)
+
+            cv2.imwrite('output_image.jpg', img_raw)
 
     fw.close()
