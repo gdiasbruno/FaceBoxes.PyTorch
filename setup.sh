@@ -21,3 +21,9 @@ unzip all_pics.zip
 
 # $ git config --global user.name "gdiasbruno"
 # $ git config --global user.email gdias.bruno@gmail.com
+
+# python finetune.py \
+# --training_dataset ./data/MALF \
+# --max_epoch 2 \
+# --resume_net FaceBoxes.pth \
+# --unfreeze_layers conf loc
