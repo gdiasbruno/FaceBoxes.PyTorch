@@ -26,6 +26,7 @@ parser.add_argument('-max', '--max_epoch', default=300, type=int, help='max epoc
 parser.add_argument('--weight_decay', default=5e-4, type=float, help='Weight decay for SGD')
 parser.add_argument('--gamma', default=0.1, type=float, help='Gamma update for SGD')
 parser.add_argument('--save_folder', default='./weights/', help='Location to save checkpoint models')
+parser.add_argument('--unfreeze_layers', default=None, nargs='+', help='List of layer names to unfreeze. Layers names: pred_net, fpn, backbone')
 args = parser.parse_args()
 
 if not os.path.exists(args.save_folder):
@@ -64,6 +65,15 @@ if args.resume_net is not None:
             name = k
         new_state_dict[name] = v
     net.load_state_dict(new_state_dict)
+
+for param in net.parameters():
+        print()
+        param.requires_grad = False
+
+for name, param in net.named_parameters():
+        if any(layer_name in name for layer_name in args.unfreeze_layers):
+          param.requires_grad = True
+          print("Unfreezing " + str(name))
 
 if num_gpu > 1 and gpu_train:
     net = torch.nn.DataParallel(net, device_ids=[0])
